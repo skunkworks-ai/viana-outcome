@@ -22,6 +22,35 @@ $ git remote add origin https://github.com/skunkworks-ai/viana-outcome.git
 $ git push -u origin develop
 ```
 
+This forking strategy was chosen to achieve two main goals: to create a private repository and to make it easier to keep our repository in sync with the upstream repository, cvat-ai/cvat.
+
+## Development
+
+The primary directories that will undergo modifications as part of this project are [`cvat`](https://github.com/skunkworks-ai/viana-outcome/tree/develop/cvat) for the back-end and [`cvat-ui`](https://github.com/skunkworks-ai/viana-outcome/tree/develop/cvat-ui) for the front-end.
+
+### Running locally with Docker
+
+```shell
+$ docker compose -f docker-compose.yml -f docker-compose.dev.yaml up --build --detach
+```
+
+### Working with `upstream`
+
+This project requires periodic synchronization with the upstream `develop` branch to ensure it remains up-to-date.
+
+```shell
+$ git remote add upstream https://github.com/cvat-ai/cvat.git
+$ git checkout develop                # we need to sync with upstream `develop` branch
+$ git fetch upstream                  # fetch latest changes from upstream
+$ git merge upstream/develop          # merge the changes from upstream
+# Or use the command below to rebase private repo commits on top of the upstream commits
+$ git pull --rebase upstream develop
+```
+
+## Deployment
+
+TBA
+
 ## Useful Links
 
 * [CVAT README](./README.CVAT.md)
