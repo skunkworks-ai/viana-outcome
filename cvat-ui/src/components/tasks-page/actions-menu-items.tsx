@@ -3,17 +3,16 @@
 // SPDX-License-Identifier: MIT
 
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { LoadingOutlined } from '@ant-design/icons';
 import { MenuProps } from 'antd/lib/menu';
 import { usePlugins } from 'utils/hooks';
 
 interface MenuItemsData {
-    taskID: number;
     isAutomaticAnnotationEnabled: boolean;
-    isConsensusEnabled: boolean;
     isMergingConsensusEnabled: boolean;
     pluginActions: ReturnType<typeof usePlugins>;
+    onOpenQualityControl: () => void;
+    onOpenConsensusManagement: (() => void) | null;
     onMergeConsensusJobs: (() => void) | null;
     onOpenBugTracker: (() => void) | null;
     onUploadAnnotations: () => void;
@@ -26,11 +25,11 @@ interface MenuItemsData {
 
 export default function TaskActionsItems(menuItemsData: MenuItemsData, taskMenuProps: unknown): MenuProps['items'] {
     const {
-        taskID,
         pluginActions,
         isAutomaticAnnotationEnabled,
-        isConsensusEnabled,
         isMergingConsensusEnabled,
+        onOpenQualityControl,
+        onOpenConsensusManagement,
         onMergeConsensusJobs,
         onUploadAnnotations,
         onExportDataset,
@@ -78,13 +77,15 @@ export default function TaskActionsItems(menuItemsData: MenuItemsData, taskMenuP
 
     menuItems.push([{
         key: 'quality_control',
-        label: <Link to={`/tasks/${taskID}/quality-control`}>Quality control</Link>,
+        onClick: onOpenQualityControl,
+        label: 'Quality control',
     }, 50]);
 
-    if (isConsensusEnabled) {
+    if (onOpenConsensusManagement) {
         menuItems.push([{
             key: 'consensus_management',
-            label: <Link to={`/tasks/${taskID}/consensus`}>Consensus management</Link>,
+            onClick: onOpenConsensusManagement,
+            label: 'Consensus management',
         }, 55]);
     }
 

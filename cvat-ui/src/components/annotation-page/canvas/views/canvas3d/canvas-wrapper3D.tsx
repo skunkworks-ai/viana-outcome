@@ -28,9 +28,7 @@ import {
     ActiveControl,
     ColorBy, CombinedState, ContextMenuType, Workspace,
 } from 'reducers';
-import {
-    OrientationVisibility, CameraAction, Canvas3d, ViewsDOM,
-} from 'cvat-canvas3d-wrapper';
+import { CameraAction, Canvas3d, ViewsDOM } from 'cvat-canvas3d-wrapper';
 
 import CVATTooltip from 'components/common/cvat-tooltip';
 import { EventScope } from 'cvat-logger';
@@ -115,7 +113,6 @@ interface StateToProps {
     outlined: boolean;
     outlineColor: string;
     colorBy: ColorBy;
-    orientationVisibility: OrientationVisibility;
     frameFetching: boolean;
     canvasInstance: Canvas3d;
     jobInstance: Job;
@@ -166,14 +163,14 @@ function mapStateToProps(state: CombinedState): StateToProps {
                 resetZoom,
             },
             shapes: {
-                opacity, colorBy, selectedOpacity, outlined, outlineColor, orientationVisibility,
+                opacity, colorBy, selectedOpacity, outlined, outlineColor,
             },
         },
     } = state;
 
     return {
         canvasInstance: canvasInstance as Canvas3d,
-        jobInstance: jobInstance as Job,
+        jobInstance,
         frameData,
         contextMenuVisibility,
         annotations,
@@ -184,7 +181,6 @@ function mapStateToProps(state: CombinedState): StateToProps {
         selectedOpacity,
         outlined,
         outlineColor,
-        orientationVisibility,
         activeLabelID,
         activatedStateID,
         activeObjectType,
@@ -482,7 +478,6 @@ const Canvas3DWrapperComponent = React.memo((props: Props): null => {
         opacity,
         outlined,
         outlineColor,
-        orientationVisibility,
         selectedOpacity,
         colorBy,
         contextMenuVisibility,
@@ -639,13 +634,12 @@ const Canvas3DWrapperComponent = React.memo((props: Props): null => {
     }, [resetZoom]);
 
     const updateShapesView = (): void => {
-        canvasInstance.configureShapes({
+        (canvasInstance as Canvas3d).configureShapes({
             opacity,
             outlined,
             outlineColor,
             selectedOpacity,
             colorBy,
-            orientationVisibility,
         });
     };
 
@@ -678,7 +672,7 @@ const Canvas3DWrapperComponent = React.memo((props: Props): null => {
 
     useEffect(() => {
         updateShapesView();
-    }, [opacity, outlined, outlineColor, selectedOpacity, colorBy, orientationVisibility]);
+    }, [opacity, outlined, outlineColor, selectedOpacity, colorBy]);
 
     useEffect(() => {
         const canvasInstanceDOM = canvasInstance.html() as ViewsDOM;

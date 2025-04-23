@@ -51,6 +51,10 @@ import AboutData from 'cvat-core/src/about';
 const cvat: CVATCore = _cvat;
 
 cvat.config.backendAPI = '/api';
+// cvat.config.backendAPI = 'https://outcome.internal.viana.ai/api';
+// cvat.config.backendAPI = 'http://localhost:8080/api';
+// cvat.config.backendAPI = 'http://localhost:3001/api';
+
 cvat.config.origin = window.location.origin;
 // Set the TUS chunk size to 2 MB. A small value works better in case of a slow internet connection.
 // A larger value may cause a server-side timeout errors in the current implementation.

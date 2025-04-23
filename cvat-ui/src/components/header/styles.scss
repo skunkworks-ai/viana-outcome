@@ -16,11 +16,13 @@
 }
 
 .ant-btn.ant-btn-link.cvat-header-button {
-    color: $text-color;
+    // color: $text-color;
+    color: $text-color-night;
     margin-right: $grid-unit-size;
 
     &:hover {
-        color: $text-color;
+        // color: $text-color;
+        color: $text-color-night;
     }
 }
 
@@ -74,6 +76,7 @@
 }
 
 .cvat-header-menu-user-dropdown {
+    color: $text-color-night;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -98,6 +101,10 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         align-items: center;
+    }
+
+    .cvat-header-menu-user-dropdown-user {
+        color: $text-color-night;
     }
 }
 

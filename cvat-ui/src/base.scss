@@ -4,12 +4,15 @@
 // SPDX-License-Identifier: MIT
 
 $grid-unit-size: 8px;
-$header-height: $grid-unit-size * 6;
+// $header-height: $grid-unit-size * 6;
+$header-height: $grid-unit-size * 8;
 $layout-lg-grid-size: $grid-unit-size * 2;
 $layout-sm-grid-color: rgba(0, 0, 0, 15%);
 $layout-lg-grid-color: rgba(0, 0, 0, 15%);
-$header-color: #d8d8d8;
+// $header-color: #d8d8d8;
+$header-color: #081c36;
 $text-color: #303030;
+$text-color-night: #FCFCFC;
 $text-color-secondary: rgba(0, 0, 0, 45%);
 $hover-menu-color: rgba(24, 144, 255, 5%);
 $completed-progress-color: #61c200;
@@ -85,7 +88,6 @@ $scroll-breakpoint: 1300px;
 }
 
 @mixin cvat-management-page-header {
-    flex-shrink: 0;
     height: $grid-unit-size * 3;
     margin: $grid-unit-size * 2 0;
 
@@ -137,34 +139,24 @@ $scroll-breakpoint: 1300px;
 }
 
 @mixin cvat-table-dynamic-size {
-    display: flex;
     flex-grow: 1;
     overflow: hidden;
 
-    .ant-table-wrapper {
+    .ant-spin-nested-loading, .ant-spin-container, .ant-table, .ant-table-container {
+        height: 100%;
+    }
+
+    .ant-spin-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ant-table {
         flex-grow: 1;
-        overflow: hidden;
+        height: 70%;
+    }
 
-        .ant-spin-nested-loading {
-            height: 100%;
-
-            .ant-spin-container {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
-
-                &:has(.ant-pagination) {
-                    .ant-table {
-                        flex-grow: 1;
-                        height: calc(100% - $grid-unit-size);
-                    }
-                }
-
-                .ant-table {
-                    height: 100%;
-                    overflow: auto;
-                }
-            }
-        }
+    .ant-table-container {
+        overflow: auto;
     }
 }
