@@ -31,7 +31,21 @@ The primary directories that will undergo modifications as part of this project 
 ### Running locally with Docker
 
 ```shell
-$ docker compose -f docker-compose.yml -f docker-compose.dev.yaml up --build --detach
+$ docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build --detach
+```
+
+### Building the Docker images
+
+Back-end:
+```shell
+$ docker build -t <registry>/cvat/server:latest -t <registry>/cvat/server:<version tag> --no-cache .
+$ docker push <registry>/cvat/server:<version tag>
+```
+
+Front-end:
+```shell
+$ docker build -f Dockerfile.ui -t <registry>/cvat/ui:latest -t <registry>/cvat/ui:<version tag> --no-cache .
+$ docker push <registry>/cvat/ui:<version tag>
 ```
 
 ### Working with `upstream`
