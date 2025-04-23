@@ -8,6 +8,7 @@ import React, {
     useCallback, useEffect, useState, useReducer,
 } from 'react';
 import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import { Row, Col } from 'antd/lib/grid';
 import Title from 'antd/lib/typography/Title';
 import notification from 'antd/lib/notification';
@@ -18,13 +19,16 @@ import Tabs, { TabsProps } from 'antd/lib/tabs';
 import Result from 'antd/lib/result';
 
 import CVATLoadingSpinner from 'components/common/loading-spinner';
-import ResourceLink from 'components/common/resource-link';
 import { ActionUnion, createAction } from 'utils/redux';
 import { fetchTask } from 'utils/fetch';
-import { getTabFromHash } from 'utils/location-utils';
 import ConsensusSettingsTab from './consensus-settings-tab';
 
 const core = getCore();
+
+function getTabFromHash(supportedTabs: string[]): string {
+    const tab = window.location.hash.slice(1);
+    return supportedTabs.includes(tab) ? tab : supportedTabs[0];
+}
 
 enum TabName {
     settings = 'settings',
@@ -103,8 +107,8 @@ const reducer = (state: State, action: ActionUnion<typeof reducerActions>): Stat
     return state;
 };
 
-const supportedTabs = Object.values(TabName);
 function ConsensusManagementPage(): JSX.Element {
+    const supportedTabs = Object.values(TabName);
     const [state, dispatch] = useReducer(reducer, {
         fetching: true,
         reportRefreshingStatus: null,
@@ -172,13 +176,14 @@ function ConsensusManagementPage(): JSX.Element {
     }, [requestedInstanceID]);
 
     useEffect(() => {
-        const onHashChange = () => setActiveTab(getTabFromHash(supportedTabs));
-        window.addEventListener('hashchange', onHashChange);
-        return () => window.removeEventListener('hashchange', onHashChange);
+        window.addEventListener('hashchange', () => {
+            const hash = getTabFromHash(supportedTabs);
+            setActiveTab(hash);
+        });
     }, []);
 
     useEffect(() => {
-        window.history.replaceState(null, '', `#${activeTab}`);
+        window.location.hash = activeTab;
     }, [activeTab]);
 
     const onTabKeyChange = useCallback((key: string): void => {
@@ -233,8 +238,8 @@ function ConsensusManagementPage(): JSX.Element {
         title = (
             <Col className='cvat-consensus-management-header'>
                 <Title level={4} className='cvat-text-color'>
-                    {'Consensus management for '}
-                    <ResourceLink resource={instance} />
+                    Consensus management for
+                    <Link to={`/tasks/${instance.id}`}>{` Task #${instance.id}`}</Link>
                 </Title>
             </Col>
         );
