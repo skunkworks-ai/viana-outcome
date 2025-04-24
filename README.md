@@ -50,15 +50,15 @@ $ docker push <registry>/cvat/ui:<version tag>
 
 ### Working with `upstream`
 
-This project requires periodic synchronization with the upstream `develop` branch to ensure it remains up-to-date.
+This project requires periodic synchronization with the upstream `master` branch to ensure it remains up-to-date.
 
 ```shell
 $ git remote add upstream https://github.com/cvat-ai/cvat.git
-$ git checkout develop                # we need to sync with upstream `develop` branch
+$ git checkout master                # we need to sync with upstream `master` branch
 $ git fetch upstream                  # fetch latest changes from upstream
-$ git merge upstream/develop          # merge the changes from upstream
+$ git merge upstream/master          # merge the changes from upstream
 # Or use the command below to rebase private repo commits on top of the upstream commits
-$ git pull --rebase upstream develop
+$ git pull --rebase upstream master
 ```
 
 ## Deployment
