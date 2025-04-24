@@ -169,15 +169,10 @@ class MaskToPolygonTransformation:
 
 
 class SetKeyframeForEveryTrackShape(dm.ItemTransform):
-    KEEPS_SUBSETS_INTACT = True
-
     def transform_item(self, item):
-        def convert_annotations():
-            annotations = []
-            for ann in item.annotations:
-                if "track_id" in ann.attributes:
-                    ann = ann.wrap(attributes=dict(ann.attributes, keyframe=True))
-                annotations.append(ann)
-            return annotations
-
-        return item.wrap(annotations=convert_annotations)
+        annotations = []
+        for ann in item.annotations:
+            if "track_id" in ann.attributes:
+                ann = ann.wrap(attributes=dict(ann.attributes, keyframe=True))
+            annotations.append(ann)
+        return item.wrap(annotations=annotations)
