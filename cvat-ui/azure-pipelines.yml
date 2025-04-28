@@ -2,6 +2,9 @@
 # Build and push an image to Azure Container Registry
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
+# Disable triggering when a PR is created
+pr: none
+
 trigger:
   branches:
     include:
@@ -24,7 +27,7 @@ variables:
   dockerRegistryServiceConnection: '3c90d7b9-95d9-4a67-aa95-33ae6de45469'
   imageRepository: 'cvat/ui'
   containerRegistry: 'vianaacr.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile.ui'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
