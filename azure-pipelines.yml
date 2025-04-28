@@ -33,11 +33,11 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 stages:
-- stage: Build and Push
-  displayName: Build and push stage
+- stage: BuildAndPush
+  displayName: Build and Push Images
   jobs:
-  - job: Build and Push Server
-    displayName: Build and push server
+  - job: BuildAndPushServer
+    displayName: Build and push server image
     pool:
       vmImage: $(vmImageName)
     steps:
@@ -51,8 +51,8 @@ stages:
         tags: |
           $(tag)
 
-  - job: Build and Push UI
-    displayName: Build and push UI
+  - job: BuildAndPushUI
+    displayName: Build and push UI image
     pool:
       vmImage: $(vmImageName)
     steps:
