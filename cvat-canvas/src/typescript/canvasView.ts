@@ -1189,6 +1189,34 @@ export class CanvasViewImpl implements CanvasView, Listener {
                     skeletonSVGTemplate = skeletonSVGTemplate ?? makeSVGFromTemplate(state.label.structure.svg);
                     setupSkeletonEdges(shape as SVG.G, skeletonSVGTemplate);
                 }
+
+                if (state.shapeType === 'rectangle' && e.target) {
+                    const { instance } = e.target as any;
+                    const [x, y, width, height, id] = [instance.x(), instance.y(), instance.width(), instance.height(), instance.id()];
+
+                    let centerType = 'centroid';
+                    let centerTypeLabelID;
+                    state.label.attributes.forEach(attribute => {
+                        if(attribute.name === 'center') {
+                            centerTypeLabelID = attribute.id;
+                        }
+                    });
+
+                    if(centerTypeLabelID) {
+                        centerType = state.attributes[centerTypeLabelID];
+                    }
+
+                    const circle = this.adoptedContent.node.getElementById(`${id}-center`);
+                    const cx = x + width / 2;
+                    circle.setAttribute('cx', cx);
+                    if(centerType === 'centroid') {
+                        const cy = y + height / 2;
+                        circle.setAttribute('cy', cy);
+                    } else if(centerType === 'botroid') {
+                        const cy = y + height;
+                        circle.setAttribute('cy', cy);
+                    }
+                }
             }).on('dragend', (): void => {
                 if (aborted) {
                     this.resetViewPosition(state.clientID);
@@ -2546,6 +2574,33 @@ export class CanvasViewImpl implements CanvasView, Listener {
                 }
             }
 
+            if (state.shapeType === 'rectangle') {
+                const [x, y, width, height, id] = [shape.x(), shape.y(), shape.width(), shape.height(), shape.id()];
+
+                let centerType = 'centroid';
+                let centerTypeLabelID;
+                state.label.attributes.forEach(attribute => {
+                    if(attribute.name === 'center') {
+                        centerTypeLabelID = attribute.id;
+                    }
+                });
+
+                if(centerTypeLabelID) {
+                    centerType = state.attributes[centerTypeLabelID];
+                }
+
+                const circle = this.adoptedContent.node.getElementById(`${id}-center`);
+                const cx = x + width / 2;
+                circle.setAttribute('cx', cx);
+                if(centerType === 'centroid') {
+                    const cy = y + height / 2;
+                    circle.setAttribute('cy', cy);
+                } else if(centerType === 'botroid') {
+                    const cy = y + height;
+                    circle.setAttribute('cy', cy);
+                }
+            }
+
             this.drawnStates[state.clientID] = this.saveState(state);
         }
     }
@@ -2558,6 +2613,20 @@ export class CanvasViewImpl implements CanvasView, Listener {
 
             if (state.shapeType === 'skeleton') {
                 this.deleteObjects(state.elements);
+            }
+
+            if (state.shapeType === 'rectangle') {
+                const circleCentroid = this.adoptedContent.node.getElementById(`cvat_canvas_shape_${state.clientID}-centroid`);
+                const circleBotroid = this.adoptedContent.node.getElementById(`cvat_canvas_shape_${state.clientID}-botroid`);
+
+                if(circleCentroid) {
+                    const parent = circleCentroid.parentNode;
+                    parent.removeChild(circleCentroid);
+                }
+                if(circleBotroid) {
+                    const parent = circleBotroid.parentNode;
+                    parent.removeChild(circleBotroid);
+                }
             }
 
             if (state.clientID in this.svgShapes) {
@@ -3177,6 +3246,43 @@ export class CanvasViewImpl implements CanvasView, Listener {
 
     private addRect(points: number[], state: any): SVG.Rect {
         const [xtl, ytl, xbr, ybr] = points;
+
+        let centerType = 'centroid';
+        let centerTypeLabelID;
+        state.label.attributes.forEach(attribute => {
+            if(attribute.name === 'center') {
+                centerTypeLabelID = attribute.id;
+            }
+        });
+
+        if(centerTypeLabelID) {
+            centerType = state.attributes[centerTypeLabelID];
+        }
+
+        const circle = this.adoptedContent.circle(10) // diameter = 6px
+            .attr({
+                clientID: `${state.clientID}-center`,
+                'color-rendering': 'optimizeQuality',
+                'shape-rendering': 'geometricprecision',
+                'data-z-order': state.zOrder + 1,
+                id: `cvat_canvas_shape_${state.clientID}-center`,
+                fill: 'red',    // Color of the center point
+                stroke: 'black',
+                'stroke-width': 1,
+            })
+            .addClass('cvat_canvas_center_point'); // Optional class
+
+        const cx = xtl + (xbr - xtl) / 2;
+        circle.node.setAttribute('cx', cx);
+        if(centerType === 'centroid') {
+            const cy = ytl + (ybr - ytl) / 2;
+            circle.node.setAttribute('cy', cy);
+        } else if(centerType === 'botroid') {
+            const cy = ytl + (ybr - ytl);
+            circle.node.setAttribute('cx', cx);
+            circle.node.setAttribute('cy', cy);
+        }
+
         const rect = this.adoptedContent
             .rect()
             .size(xbr - xtl, ybr - ytl)
