@@ -27,7 +27,7 @@ variables:
   imageRepositoryUI: 'cvat/ui'
   dockerfilePathUI: '$(Build.SourcesDirectory)/Dockerfile.ui'
 
-  tag: '$(Build.SourceVersion)'
+  tag: '$(Build.SourceBranchName)'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
