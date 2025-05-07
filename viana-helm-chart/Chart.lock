@@ -16,7 +16,7 @@ dependencies:
   version: 6.60.6
 - name: traefik
   repository: https://helm.traefik.io/traefik
-  version: 25.0.0
+  version: 34.4.1
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 18.5.0
