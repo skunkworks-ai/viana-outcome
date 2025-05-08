@@ -388,12 +388,12 @@ function HeaderComponent(props: Props): JSX.Element {
         label: 'Settings',
     }, 20]);
 
-    menuItems.push([{
-        key: 'about',
-        icon: <InfoCircleOutlined />,
-        onClick: () => showAboutModal(),
-        label: 'About',
-    }, 30]);
+    // menuItems.push([{
+    //     key: 'about',
+    //     icon: <InfoCircleOutlined />,
+    //     onClick: () => showAboutModal(),
+    //     label: 'About',
+    // }, 30]);
 
     if (renderChangePasswordItem) {
         menuItems.push([{
@@ -520,7 +520,7 @@ function HeaderComponent(props: Props): JSX.Element {
                 ) : null}
             </div>
             <div className='cvat-right-header'>
-                <CVATTooltip overlay='Click to open repository'>
+                {/* <CVATTooltip overlay='Click to open repository'>
                     <Button
                         icon={<GithubOutlined />}
                         size='large'
@@ -532,8 +532,8 @@ function HeaderComponent(props: Props): JSX.Element {
                             window.open(GITHUB_URL, '_blank');
                         }}
                     />
-                </CVATTooltip>
-                <CVATTooltip overlay='Click to open guide'>
+                </CVATTooltip> */}
+                {/* <CVATTooltip overlay='Click to open guide'>
                     <Button
                         icon={<QuestionCircleOutlined />}
                         size='large'
@@ -545,7 +545,7 @@ function HeaderComponent(props: Props): JSX.Element {
                             window.open(GUIDE_URL, '_blank');
                         }}
                     />
-                </CVATTooltip>
+                </CVATTooltip> */}
                 <Dropdown
                     trigger={['click']}
                     destroyPopupOnHide
