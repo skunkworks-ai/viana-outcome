@@ -2618,16 +2618,11 @@ export class CanvasViewImpl implements CanvasView, Listener {
             }
 
             if (state.shapeType === 'rectangle') {
-                const circleCentroid = this.adoptedContent.node.getElementById(`cvat_canvas_shape_${state.clientID}-centroid`);
-                const circleBotroid = this.adoptedContent.node.getElementById(`cvat_canvas_shape_${state.clientID}-botroid`);
+                const center = this.adoptedContent.node.getElementById(`cvat_canvas_shape_${state.clientID}-center`);
 
-                if(circleCentroid) {
-                    const parent = circleCentroid.parentNode;
-                    parent.removeChild(circleCentroid);
-                }
-                if(circleBotroid) {
-                    const parent = circleBotroid.parentNode;
-                    parent.removeChild(circleBotroid);
+                if(center) {
+                    const parent = center.parentNode;
+                    parent.removeChild(center);
                 }
             }
 
