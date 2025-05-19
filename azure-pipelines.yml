@@ -1,69 +1,53 @@
-# Docker
-# Build and push an image to Azure Container Registry
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
-# Disable triggering when a PR is created
+# Disable triggering CI build through PR
 pr: none
 
 trigger:
+# Will trigger when tags are in the ff. forms:
+#   1. v1.0.0-alpha.1+outcome
+#   2. v1.0.0-beta+outcome
+#   3. v1.0.0+outcome
+# Won't trigger when tags are missing the '+' build suffix e.g.
+#   v1.0.0-alpha, v1.0.0-beta.1 or v1.0.0
   tags:
     include:
-    - '*.*.*-alpha.*'
-    - '*.*.*-beta.*'
-    - '*.*.*-rc.*'
-    - '*.*.*'
-    - 'v*.*.*'
-    - 'v*.*.*+*'
-
-resources:
-- repo: self
+      - v*.*.*+*
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '3c90d7b9-95d9-4a67-aa95-33ae6de45469'
-  containerRegistry: 'vianaacr.azurecr.io'
+  TAG_NAME: $(Build.SourceBranchName)
+  REGISTRY_SERVICE_CONNECTION: 3c90d7b9-95d9-4a67-aa95-33ae6de45469
+  DOCKERFILE_SERVER: $(Build.SourcesDirectory)/Dockerfile
+  REPOSITORY_SERVER: cvat/server
+  DOCKERFILE_UI: $(Build.SourcesDirectory)/Dockerfile.ui
+  REPOSITORY_UI: cvat/ui
 
-  imageRepositoryServer: 'cvat/server'
-  dockerfilePathServer: '$(Build.SourcesDirectory)/Dockerfile'
-
-  imageRepositoryUI: 'cvat/ui'
-  dockerfilePathUI: '$(Build.SourcesDirectory)/Dockerfile.ui'
-
-  tag: '$(Build.SourceBranchName)'
-
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+pool:
+  vmImage: ubuntu-latest
 
 stages:
-- stage: BuildAndPush
-  displayName: Build and Push Images
+- stage: BuildAndPushServer
+  displayName: 'Build and push server image'
   jobs:
-  - job: BuildAndPushServer
-    displayName: Build and push server image
-    pool:
-      vmImage: $(vmImageName)
+  - job: BuildAndPushServerJob
     steps:
     - task: Docker@2
-      displayName: Build and push server image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepositoryServer)
-        dockerfile: $(dockerFilePathServer)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+        repository: $(REPOSITORY_SERVER)
+        dockerfile: $(DOCKERFILE_SERVER)
+        containerRegistry: $(REGISTRY_SERVICE_CONNECTION)
+        tag: |
+          ${TAG_NAME#v}
 
-  - job: BuildAndPushUI
-    displayName: Build and push UI image
-    pool:
-      vmImage: $(vmImageName)
+- stage: BuildAndPushUI
+  displayName: 'Build and push UI image'
+  jobs:
+  - job: BuildAndPushUIJob
     steps:
     - task: Docker@2
-      displayName: Build and push UI image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepositoryUI)
-        dockerfile: $(dockerfilePathUI)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+        repository: $(REPOSITORY_UI)
+        dockerfile: $(DOCKERFILE_UI)
+        containerRegistry: $(REGISTRY_SERVICE_CONNECTION)
+        tag: |
+          ${TAG_NAME#v}
