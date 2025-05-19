@@ -12,6 +12,7 @@ trigger:
     - '*.*.*-beta.*'
     - '*.*.*-rc.*'
     - '*.*.*'
+    - 'v*.*.*'
 
 resources:
 - repo: self
