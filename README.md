@@ -63,7 +63,30 @@ $ git pull --rebase upstream master
 
 ## Deployment
 
-TBA
+### Git Version Tags
+
+Since this project is based on the open source CVAT project, the Git tags for this project will be prefixed with the `v` character and suffixed with the `+outcome` [build metadata](https://semver.org/#spec-item-10). The reason for this is to differentiate the version tags from the tags used in the upstream CVAT project.
+
+Examples:
+
+1. Pre-release versions: `v1.0.0-alpha+outcome`, `v1.0.0-beta.1+outcome`, `v1.0.0-rc.2+outcome`
+2. Release version: `v1.0.0+outcome`
+
+### Image Tags
+
+Unfortunately, image tags don't support the `+*` format i.e. tagging the image `cvat/ui:1.0.0+outcome` will cause the error `ERROR: invalid tag "cvat/ui:1.0.0+outcome": invalid reference format`. To address this error, the [`azure-pipelines.yml`](./azure-pipelines.yml) file has a stage to derive the image tag version by removing the prefix "v" and the "+*" suffix from the tag name. Example, if the Git tag uses is `v1.0.0+outcome` the image tag version will be `1.0.0` so tagging an image like `cvat/ui:1.0.0` will be valid.
+
+### CI Builds
+
+When a Git tag is pushed to remote `origin`, Azure Pipelines will run a CI build if the tag satisfies the condition of set in the trigger section of the YAML file; currently the pattern is set to `v*.*.*+*`. The examples provided in the [Git Version Tags](https://github.com/skunkworks-ai/viana-outcome#git-version-tags) section are all valid tags.
+
+The CI build won't trigger if the tag does not have the `+*` suffix; this will also ensure that if a remote `upstream` tag is pushed to remote `origin`, it will not create an image build.
+
+### Releases
+
+The [Azure Pipelines Releases](https://learn.microsoft.com/en-us/azure/devops/pipelines/release/releases?view=azure-devops) will be used to deploy a pre-release or release version to the corresponding Kubernetes cluster. Just input the [Image Tag](https://github.com/skunkworks-ai/viana-outcome#image-tags) version e.g. `1.0.0-alpha.1` (in the development release pipeline) to trigger a release to the corresponding environment.
+
+> NOTE: Use the image tag format for the version to use in the release pipeline, NOT the Git version tag, as the images used in the deploy will be based on the image tag provided when creating the release.
 
 ## Useful Links
 
