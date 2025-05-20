@@ -13,6 +13,7 @@ trigger:
       - v*.*.*+*
 
 variables:
+  DOCKER_BUILDKIT: 1
   REGISTRY_SERVICE_CONNECTION: 3c90d7b9-95d9-4a67-aa95-33ae6de45469
   DOCKERFILE_SERVER: $(Build.SourcesDirectory)/Dockerfile
   REPOSITORY_SERVER: cvat/server
@@ -33,6 +34,7 @@ stages:
     - bash: |
         BRANCH=$(Build.SourceBranchName)  # Tag that triggered the build
         VERSION=${BRANCH#v}               # Remove the "v" prefix from tag
+        VERSION=${VERSION%+*}             # Remove the "+*" suffix from tag
 
         echo "BRANCH is: $BRANCH"
         echo "VERSION is: $VERSION"
@@ -47,7 +49,7 @@ stages:
     TAG_VERSION: $[stageDependencies.A.A1.outputs['ImageTag.version']]
   jobs:
   - job: B1
-    displayName: Build and push server image
+    displayName: Build and push server image job
     steps:
     - task: Docker@2
       inputs:
@@ -59,7 +61,7 @@ stages:
           $(TAG_VERSION)
       displayName: Build and push server image task
   - job: B2
-    displayName: Build and push UI image
+    displayName: Build and push UI image job
     steps:
     - task: Docker@2
       inputs:
