@@ -18,31 +18,36 @@ variables:
   REPOSITORY_SERVER: cvat/server
   DOCKERFILE_UI: $(Build.SourcesDirectory)/Dockerfile.ui
   REPOSITORY_UI: cvat/ui
-  REF_TAG: ''    # Source reference tag e.g. v1.0.0+outcome
-  IMAGE_TAG: ''  # Reference tag without the "v" prefix e.g. 1.0.0+outcome
 
 pool:
-  vmImage: ubuntu-latest
+# Using the same Ubuntu version as specified in Dockerfile
+  vmImage: ubuntu-22.04
 
 stages:
-- stage: SetVariables
-  displayName: 'Set REF_TAG and IMAGE_TAG Variables'
+- stage: A
+  displayName: Derive image tag version
   jobs:
-  - job: SetVariablesJob
+  - job: A1
+    displayName: Derive image tag version job
     steps:
-    - script: |
-        REF_TAG=$(Build.SourceBranchName)
-        IMAGE_TAG=${REF_TAG#v}
+    - bash: |
+        BRANCH=$(Build.SourceBranchName)  # Tag that triggered the build
+        VERSION=${BRANCH#v}               # Remove the "v" prefix from tag
 
-        # Set the variables for use in subsequent stages
-        echo "##vso[task.setvariable variable=REF_TAG;isOutput=true]$REF_TAG"
-        echo "##vso[task.setvariable variable=IMAGE_TAG;isOutput=true]$IMAGE_TAG"
+        echo "BRANCH is: $BRANCH"
+        echo "VERSION is: $VERSION"
 
-- stage: BuildAndPushImages
-  displayName: 'Build and push images'
+        echo "##vso[task.setvariable variable=version;isOutput=true]$VERSION"
+      name: ImageTag
+      displayName: Derive image tag version from branch name
+- stage: B
+  displayName: Build and push images
+  dependsOn: A
+  variables:
+    TAG_VERSION: $[stageDependencies.A.A1.outputs['ImageTag.version']]
   jobs:
-  - job: BuildAndPushServerJob
-    displayName: 'Build and push server image'
+  - job: B1
+    displayName: Build and push server image
     steps:
     - task: Docker@2
       inputs:
@@ -51,9 +56,10 @@ stages:
         dockerfile: $(DOCKERFILE_SERVER)
         containerRegistry: $(REGISTRY_SERVICE_CONNECTION)
         tag: |
-          $(IMAGE_TAG)
-  - job: BuildAndPushUIJob
-    displayName: 'Build and push UI image'
+          $(TAG_VERSION)
+      displayName: Build and push server image task
+  - job: B2
+    displayName: Build and push UI image
     steps:
     - task: Docker@2
       inputs:
@@ -62,4 +68,5 @@ stages:
         dockerfile: $(DOCKERFILE_UI)
         containerRegistry: $(REGISTRY_SERVICE_CONNECTION)
         tag: |
-          $(IMAGE_TAG)
+          $(TAG_VERSION)
+      displayName: Build and push UI image task
