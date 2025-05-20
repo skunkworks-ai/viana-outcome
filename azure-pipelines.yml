@@ -51,6 +51,9 @@ stages:
   - job: B1
     displayName: Build and push server image job
     steps:
+    - bash: |
+        echo $(REPOSITORY_SERVER):$(TAG_VERSION)
+      displayName: Sanity check -- echo repository and tag
     - task: Docker@2
       inputs:
         command: buildAndPush
@@ -63,6 +66,8 @@ stages:
   - job: B2
     displayName: Build and push UI image job
     steps:
+    - bash: |
+        echo $(REPOSITORY_PORTAL):$(TAG_VERSION)
     - task: Docker@2
       inputs:
         command: buildAndPush
