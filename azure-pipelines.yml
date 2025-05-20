@@ -12,6 +12,10 @@ trigger:
     include:
       - v*.*.*+*
 
+pool:
+# Using the same Ubuntu version as specified in Dockerfile
+  vmImage: ubuntu-22.04
+
 variables:
   DOCKER_BUILDKIT: 1
   REGISTRY_SERVICE_CONNECTION: 3c90d7b9-95d9-4a67-aa95-33ae6de45469
@@ -19,10 +23,6 @@ variables:
   REPOSITORY_SERVER: cvat/server
   DOCKERFILE_UI: $(Build.SourcesDirectory)/Dockerfile.ui
   REPOSITORY_UI: cvat/ui
-
-pool:
-# Using the same Ubuntu version as specified in Dockerfile
-  vmImage: ubuntu-22.04
 
 stages:
 - stage: A
@@ -40,40 +40,35 @@ stages:
         echo "VERSION is: $VERSION"
 
         echo "##vso[task.setvariable variable=version;isOutput=true]$VERSION"
-      name: ImageTag
+      name: DerivedImageTag
       displayName: Derive image tag version from branch name
 - stage: B
   displayName: Build and push images
   dependsOn: A
   variables:
-    TAG_VERSION: $[stageDependencies.A.A1.outputs['ImageTag.version']]
+    TAG_VERSION: $[stageDependencies.A.A1.outputs['DerivedImageTag.version']]
   jobs:
   - job: B1
     displayName: Build and push server image job
     steps:
-    - bash: |
-        echo $(REPOSITORY_SERVER):$(TAG_VERSION)
-      displayName: Sanity check -- echo repository and tag
     - task: Docker@2
       inputs:
-        command: buildAndPush
-        repository: $(REPOSITORY_SERVER)
-        dockerfile: $(DOCKERFILE_SERVER)
         containerRegistry: $(REGISTRY_SERVICE_CONNECTION)
-        tag: |
+        repository: $(REPOSITORY_SERVER)
+        command: buildAndPush
+        Dockerfile: $(DOCKERFILE_SERVER)
+        tags: |
           $(TAG_VERSION)
       displayName: Build and push server image task
   - job: B2
     displayName: Build and push UI image job
     steps:
-    - bash: |
-        echo $(REPOSITORY_PORTAL):$(TAG_VERSION)
     - task: Docker@2
       inputs:
-        command: buildAndPush
-        repository: $(REPOSITORY_UI)
-        dockerfile: $(DOCKERFILE_UI)
         containerRegistry: $(REGISTRY_SERVICE_CONNECTION)
-        tag: |
+        repository: $(REPOSITORY_UI)
+        command: buildAndPush
+        Dockerfile: $(DOCKERFILE_UI)
+        tags: |
           $(TAG_VERSION)
       displayName: Build and push UI image task
