@@ -63,6 +63,7 @@ stages:
           docker-compose.outcome.yml
         dockerComposeFileArgs: |
           REGISTRY_URL=$(REGISTRY_URL)
+          OUTCOME_VERSION=$(TAG_VERSION)
         projectName: outcome
         action: 'Build services'
         additionalImageTags: |
