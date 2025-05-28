@@ -12,5 +12,29 @@ services:
       EMAIL_HOST_PASSWORD: '${EMAIL_HOST_PASSWORD}'
       EMAIL_USE_TLS: '${EMAIL_USE_TLS:-0}'
 
+  cvat_worker_utils:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+
+  cvat_worker_import:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+
+  cvat_worker_export:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+
+  cvat_worker_annotation:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+
+  cvat_worker_webhooks:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+
+  cvat_worker_quality_reports:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+
+  cvat_worker_chunks:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+
+  cvat_worker_consensus:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+
   cvat_ui:
     image: ${REGISTRY_URL}/cvat/ui:${OUTCOME_VERSION}
