@@ -3,7 +3,7 @@ services:
     image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
     build:
       args:
-        - DJANGO_SETTINGS_MODULE=cvat.settings.outcome
+        - DJANGO_SETTINGS_MODULE=cvat.settings.production
     env_file:
       - path: .env
         required: false
