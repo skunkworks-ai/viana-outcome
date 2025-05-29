@@ -60,7 +60,6 @@ stages:
         dockerComposeFile: $(Build.SourcesDirectory)/docker-compose.yml
         additionalDockerComposeFiles: |
           docker-compose.dev.yml
-          docker-compose.outcome.yml
         dockerComposeFileArgs: |
           REGISTRY_URL=$(REGISTRY_URL)
           OUTCOME_VERSION=$(TAG_VERSION)

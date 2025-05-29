@@ -1,15 +1,17 @@
 services:
   cvat_server:
     image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+    build:
+      args:
+        - DJANGO_SETTINGS_MODULE=cvat.settings.outcome
     env_file:
       - path: .env
         required: false
     environment:
-      DJANGO_SETTINGS_MODULE: 'cvat.settings.outcome'
-      EMAIL_HOST: '${EMAIL_HOST}'
+      EMAIL_HOST: '${EMAIL_HOST:-""}'
       EMAIL_PORT: '${EMAIL_PORT:-587}'
-      EMAIL_HOST_USER: '${EMAIL_HOST_USER}'
-      EMAIL_HOST_PASSWORD: '${EMAIL_HOST_PASSWORD}'
+      EMAIL_HOST_USER: '${EMAIL_HOST_USER:-""}'
+      EMAIL_HOST_PASSWORD: '${EMAIL_HOST_PASSWORD-""}'
       EMAIL_USE_TLS: '${EMAIL_USE_TLS:-0}'
 
   cvat_worker_utils:
