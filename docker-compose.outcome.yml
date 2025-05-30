@@ -7,6 +7,7 @@ services:
     env_file:
 #       Copy .env.sample to .env and fill with proper values
       - path: .env
+        required: false
 
   cvat_worker_utils:
     image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
