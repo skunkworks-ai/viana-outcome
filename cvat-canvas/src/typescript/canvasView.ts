@@ -1407,6 +1407,33 @@ export class CanvasViewImpl implements CanvasView, Listener {
                         resized = true;
                         skeletonSVGTemplate = skeletonSVGTemplate ?? makeSVGFromTemplate(state.label.structure.svg);
                         setupSkeletonEdges(shape as SVG.G, skeletonSVGTemplate);
+                    } else if (state.shapeType === 'rectangle' && e.target) {
+                        const { instance } = e.target as any;
+                        const [x, y, width, height, id] = [instance.x(), instance.y(), instance.width(), instance.height(), instance.id()];
+
+                        let centerType = 'centroid';
+                        let centerTypeLabelID;
+                        state.label.attributes.forEach(attribute => {
+                            if(attribute.name === 'center') {
+                                centerTypeLabelID = attribute.id;
+                            }
+                        });
+
+                        if(centerTypeLabelID) {
+                            centerType = state.attributes[centerTypeLabelID];
+
+                            const circle = this.adoptedContent.node.getElementById(`${id}-center`);
+                            const cx = x + width / 2;
+                            circle.setAttribute('cx', cx);
+                            if(centerType === 'centroid') {
+                                const cy = y + height / 2;
+                                circle.setAttribute('cy', cy);
+                            } else if(centerType === 'botroid') {
+                                const cy = y + height;
+                                circle.setAttribute('cy', cy);
+                            }
+                        }
+
                     }
                 })
                 .on('resizedone', (): void => {
