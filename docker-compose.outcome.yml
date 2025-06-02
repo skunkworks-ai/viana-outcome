@@ -1,9 +1,6 @@
 services:
   cvat_server:
     image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
-    build:
-      args:
-        - DJANGO_SETTINGS_MODULE=cvat.settings.outcome
     env_file:
 #       Copy .env.sample to .env and fill with proper values
       - path: .env
