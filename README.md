@@ -88,6 +88,20 @@ The [Azure Pipelines Releases](https://learn.microsoft.com/en-us/azure/devops/pi
 
 > NOTE: Use the image tag format for the version to use in the release pipeline, NOT the Git version tag, as the images used in the deploy will be based on the image tag provided when creating the release.
 
+## Email (SMTP) Django settings
+
+To enable email functionality, the following environment variables need to be set at runtime i.e. when running with Docker Compose or deploying with Helm.
+
+- DJANGO_SETTINGS_MODULE=cvat.settings.outcome
+    - The `cvat.settings.outcome` settings module uses the [Django SMTP backend](https://docs.djangoproject.com/en/dev/topics/email/#smtp-backend) for emails and need the environment variables below to be set
+- EMAIL_HOST
+- EMAIL_HOST_USER
+- EMAIL_HOST_PASSWORD
+- DEFAULT_FROM_EMAIL
+    - This environment variable may be needed depending on the SMTP host used; for example this is needed when using the [Twilio Sendgrid SMTP server](https://www.twilio.com/en-us/blog/using-twilio-sendgrid-send-emails-python-django)
+
+When running with Docker Compose, copy the `.env.sample` file to `.env` and populate accordingly. When deploying with Helm, define these in the `cvat.backend.server.additionalEnv` section of the override YAML.
+
 ## Useful Links
 
 * [CVAT README](./README.CVAT.md)
