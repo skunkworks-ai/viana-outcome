@@ -1190,6 +1190,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                     setupSkeletonEdges(shape as SVG.G, skeletonSVGTemplate);
                 }
 
+                // Start - Viana Outcome
                 if (state.shapeType === 'rectangle' && e.target) {
                     const { instance } = e.target as any;
                     const [x, y, width, height, id] = [instance.x(), instance.y(), instance.width(), instance.height(), instance.id()];
@@ -1218,6 +1219,8 @@ export class CanvasViewImpl implements CanvasView, Listener {
                     }
 
                 }
+                // End - Viana Outcome
+
             }).on('dragend', (): void => {
                 if (aborted) {
                     this.resetViewPosition(state.clientID);
@@ -1407,6 +1410,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                         resized = true;
                         skeletonSVGTemplate = skeletonSVGTemplate ?? makeSVGFromTemplate(state.label.structure.svg);
                         setupSkeletonEdges(shape as SVG.G, skeletonSVGTemplate);
+                    // Start - Viana Outcome
                     } else if (state.shapeType === 'rectangle' && e.target) {
                         const { instance } = e.target as any;
                         const [x, y, width, height, id] = [instance.x(), instance.y(), instance.width(), instance.height(), instance.id()];
@@ -1433,7 +1437,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                                 circle.setAttribute('cy', cy);
                             }
                         }
-
+                    // End - Viana Outcome
                     }
                 })
                 .on('resizedone', (): void => {
@@ -2602,6 +2606,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                 }
             }
 
+            // Start - Viana Outcome
             if (state.shapeType === 'rectangle') {
                 const [x, y, width, height, id] = [shape.x(), shape.y(), shape.width(), shape.height(), shape.id()];
 
@@ -2629,6 +2634,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                 }
 
             }
+            // End - Viana Outcome
 
             this.drawnStates[state.clientID] = this.saveState(state);
         }
@@ -2644,6 +2650,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                 this.deleteObjects(state.elements);
             }
 
+            // Start - Viana Outcome
             if (state.shapeType === 'rectangle') {
                 const center = this.adoptedContent.node.getElementById(`cvat_canvas_shape_${state.clientID}-center`);
 
@@ -2652,6 +2659,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                     parent.removeChild(center);
                 }
             }
+            // End - Viana Outcome
 
             if (state.clientID in this.svgShapes) {
                 this.svgShapes[state.clientID].fire('remove');
@@ -3271,6 +3279,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
     private addRect(points: number[], state: any): SVG.Rect {
         const [xtl, ytl, xbr, ybr] = points;
 
+        // Start - Viana Outcome
         let centerType = 'centroid';
         let centerTypeLabelID;
         state.label.attributes.forEach(attribute => {
@@ -3306,7 +3315,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
                 circle.node.setAttribute('cy', cy);
             }
         }
-
+        // End - Viana Outcome
 
         const rect = this.adoptedContent
             .rect()

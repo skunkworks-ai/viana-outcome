@@ -10,7 +10,7 @@ import re
 import sys
 from collections import OrderedDict, defaultdict
 from collections.abc import Iterable, Iterator, Mapping, Sequence
-from functools import reduce
+from functools import partial, reduce
 from operator import add
 from pathlib import Path
 from types import SimpleNamespace
@@ -23,7 +23,7 @@ import defusedxml.ElementTree as ET
 import rq
 from attr import attrib, attrs
 from attrs.converters import to_bool
-from datumaro.components.dataset_base import IDataset, StreamingDatasetBase
+from datumaro.components.dataset_base import IDataset, StreamingDatasetBase, StreamingSubsetBase
 from datumaro.components.format_detection import RejectionReason
 from django.conf import settings
 from django.db.models import Prefetch, QuerySet
@@ -1715,7 +1715,7 @@ class CvatDataExtractorBase(CVATDataExtractorMixin):
             else:
                 dm_media = dm.Image.from_file(**dm_media_args)
 
-        dm_anno = self._read_cvat_anno(frame_data, self._instance_meta['labels'])
+        dm_anno = partial(self._read_cvat_anno, frame_data, self._instance_meta['labels'])
 
         dm_attributes = {'frame': frame_data.frame}
 
@@ -1748,10 +1748,10 @@ class CvatDataExtractorBase(CVATDataExtractorMixin):
         return dm_item
 
 
-class CvatTaskOrJobDataExtractor(dm.SubsetBase, CvatDataExtractorBase):
+class CvatTaskOrJobDataExtractor(StreamingSubsetBase, CvatDataExtractorBase):
     def __init__(self, *args, **kwargs):
         CvatDataExtractorBase.__init__(self, *args, **kwargs)
-        dm.SubsetBase.__init__(
+        StreamingSubsetBase.__init__(
             self,
             media_type=dm.Image if self._dimension == DimensionType.DIM_2D else dm.PointCloud,
             subset=self._instance_meta['subset'],
@@ -1797,10 +1797,6 @@ class CvatTaskOrJobDataExtractor(dm.SubsetBase, CvatDataExtractorBase):
     def categories(self):
         return self._categories
 
-    @property
-    def is_stream(self) -> bool:
-        return True
-
 
 class CVATProjectDataExtractor(StreamingDatasetBase, CvatDataExtractorBase):
     def __init__(self, *args, **kwargs):
@@ -1842,15 +1838,11 @@ class CVATProjectDataExtractor(StreamingDatasetBase, CvatDataExtractorBase):
                     frame_data = self.copy_frame_data_with_replaced_lazy_lists(frame_data)
                     yield self._process_one_frame_data(frame_data)
 
-            def __len__(self):
-                return len(extractor._frame_data_by_subset[name])
+            def __len__(_):
+                return len(self._frame_data_by_subset[name])
 
-            def categories(self):
-                return extractor.categories()
-
-            @property
-            def is_stream(self) -> bool:
-                return True
+            def categories(_):
+                return self.categories()
 
         return Subset(
             subset=name,
