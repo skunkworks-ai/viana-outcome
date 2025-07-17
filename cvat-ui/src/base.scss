@@ -133,7 +133,7 @@ $scroll-breakpoint: 1300px;
         margin-inline-end: 0;
     }
 
-    .ant-tabs-content-holder, .ant-tabs-content, .ant-tabs-tabpane {
+    .ant-tabs-content, .ant-tabs-tabpane {
         height: 100%;
     }
 }
@@ -149,6 +149,7 @@ $scroll-breakpoint: 1300px;
 
         .ant-spin-nested-loading {
             height: 100%;
+            width: 100%;
 
             .ant-spin-container {
                 display: flex;
