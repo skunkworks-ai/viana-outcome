@@ -1,34 +1,34 @@
 services:
   cvat_server:
-    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
     env_file:
 #       Copy .env.sample to .env and fill with proper values
       - path: .env
         required: false
 
-  cvat_worker_utils:
-    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
-
-  cvat_worker_import:
-    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
-
-  cvat_worker_export:
-    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
-
   cvat_worker_annotation:
-    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
-
-  cvat_worker_webhooks:
-    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
-
-  cvat_worker_quality_reports:
-    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
 
   cvat_worker_chunks:
-    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
 
   cvat_worker_consensus:
-    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION}
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
+
+  cvat_worker_export:
+      image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
+
+  cvat_worker_import:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
+
+  cvat_worker_quality_reports:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
+
+  cvat_worker_utils:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
+
+  cvat_worker_webhooks:
+    image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
 
   cvat_ui:
-    image: ${REGISTRY_URL}/cvat/ui:${OUTCOME_VERSION}
+    image: ${REGISTRY_URL}/cvat/ui:${OUTCOME_VERSION:-local}

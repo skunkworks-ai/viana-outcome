@@ -1,7 +1,9 @@
-import os
-
-# Inherit parent config
 from .production import *  # pylint: disable=wildcard-import
+
+LOGO_FILENAME = "outcome-logo.png"
+ABOUT_INFO = {
+    "subtitle": "Viana Outcome",
+}
 
 # Email backend settings for Django
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

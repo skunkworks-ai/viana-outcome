@@ -388,12 +388,14 @@ function HeaderComponent(props: Props): JSX.Element {
         label: 'Settings',
     }, 20]);
 
-    // menuItems.push([{
-    //     key: 'about',
-    //     icon: <InfoCircleOutlined />,
-    //     onClick: () => showAboutModal(),
-    //     label: 'About',
-    // }, 30]);
+    // Start - Viana Outcome
+    /* menuItems.push([{
+        key: 'about',
+        icon: <InfoCircleOutlined />,
+        onClick: () => showAboutModal(),
+        label: 'About',
+    }, 30]); */
+    // End - Viana Outcome
 
     if (renderChangePasswordItem) {
         menuItems.push([{
@@ -520,6 +522,7 @@ function HeaderComponent(props: Props): JSX.Element {
                 ) : null}
             </div>
             <div className='cvat-right-header'>
+                {/* Start - Viana Outcome */}
                 {/* <CVATTooltip overlay='Click to open repository'>
                     <Button
                         icon={<GithubOutlined />}
@@ -532,8 +535,8 @@ function HeaderComponent(props: Props): JSX.Element {
                             window.open(GITHUB_URL, '_blank');
                         }}
                     />
-                </CVATTooltip> */}
-                {/* <CVATTooltip overlay='Click to open guide'>
+                </CVATTooltip>
+                <CVATTooltip overlay='Click to open guide'>
                     <Button
                         icon={<QuestionCircleOutlined />}
                         size='large'
@@ -546,6 +549,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         }}
                     />
                 </CVATTooltip> */}
+                {/* End - Viana Outcome */}
                 <Dropdown
                     trigger={['click']}
                     destroyPopupOnHide

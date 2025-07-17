@@ -52,8 +52,7 @@ export const formSizes: FormSizes = {
 function SignInLayout(props: SignInLayoutComponentProps): JSX.Element {
     const { children } = props;
     const { Content, Header } = Layout;
-    // const subtitle = useSelector((state: CombinedState) => state.about.server.subtitle);
-    const subtitle = 'Viana Outcome';
+    const subtitle = useSelector((state: CombinedState) => state.about.server.subtitle);
 
     const titleSizes = {
         xs: { span: 0 },
