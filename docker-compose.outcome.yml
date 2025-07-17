@@ -5,6 +5,8 @@ services:
 #       Copy .env.sample to .env and fill with proper values
       - path: .env
         required: false
+    environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-cvat.settings.outcome}
 
   cvat_worker_annotation:
     image: ${REGISTRY_URL}/cvat/server:${OUTCOME_VERSION:-local}
