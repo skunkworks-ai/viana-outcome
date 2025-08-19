@@ -33,6 +33,7 @@ import {
     readPointsFromShape, setupSkeletonEdges, makeSVGFromTemplate,
     imageDataToDataURL, expandChannels, stringifyPoints, zipChannels,
     composeShapeDimensions, getRoundedRotation,
+    clamp,
 } from './shared';
 import {
     CanvasModel, Geometry, UpdateReasons, FrameZoom, ActiveElement,
@@ -87,6 +88,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
     private snapToAngleResize: number;
     private draggableShape: SVG.Shape | null;
     private resizableShape: SVG.Shape | null;
+    private ctrlPressed: boolean;
     private innerObjectsFlags: {
         drawHidden: Record<number, boolean>;
         editHidden: Record<number, boolean>;
@@ -1516,8 +1518,14 @@ export class CanvasViewImpl implements CanvasView, Listener {
         }
     }
 
-    private onShiftKeyDown = (e: KeyboardEvent): void => {
-        if (!e.repeat && (e.code || '').toLowerCase().includes('shift')) {
+    private onKeyDown = (e: KeyboardEvent): void => {
+        if (e.repeat) {
+            return;
+        }
+
+        const code = (e.code ?? '').toLowerCase();
+
+        if (code.includes('shift')) {
             this.snapToAngleResize = consts.SNAP_TO_ANGLE_RESIZE_SHIFT;
             if (this.activeElement) {
                 const shape = this.svgShapes[this.activeElement.clientID];
@@ -1533,10 +1541,16 @@ export class CanvasViewImpl implements CanvasView, Listener {
                 }
             }
         }
+
+        if (code.includes('control')) {
+            this.ctrlPressed = true;
+        }
     };
 
-    private onShiftKeyUp = (e: KeyboardEvent): void => {
-        if ((e.code || '').toLowerCase().includes('shift') && this.activeElement) {
+    private onKeyUp = (e: KeyboardEvent): void => {
+        const code = (e.code ?? '').toLowerCase();
+
+        if (code.includes('shift') && this.activeElement) {
             this.snapToAngleResize = consts.SNAP_TO_ANGLE_RESIZE_DEFAULT;
             if (this.activeElement) {
                 const shape = this.svgShapes[this.activeElement.clientID];
@@ -1551,6 +1565,10 @@ export class CanvasViewImpl implements CanvasView, Listener {
                     }
                 }
             }
+        }
+
+        if (code.includes('control')) {
+            this.ctrlPressed = false;
         }
     };
 
@@ -1578,6 +1596,7 @@ export class CanvasViewImpl implements CanvasView, Listener {
         this.configuration = model.configuration;
         this.mode = Mode.IDLE;
         this.snapToAngleResize = consts.SNAP_TO_ANGLE_RESIZE_DEFAULT;
+        this.ctrlPressed = false;
         this.innerObjectsFlags = {
             drawHidden: {},
             editHidden: {},
@@ -1756,8 +1775,8 @@ export class CanvasViewImpl implements CanvasView, Listener {
         });
 
         window.document.addEventListener('mouseup', this.onMouseUp);
-        window.document.addEventListener('keydown', this.onShiftKeyDown);
-        window.document.addEventListener('keyup', this.onShiftKeyUp);
+        window.document.addEventListener('keydown', this.onKeyDown);
+        window.document.addEventListener('keyup', this.onKeyUp);
 
         for (const eventName of ['wheel', 'mousedown', 'dblclick', 'contextmenu']) {
             this.attachmentBoard.addEventListener(eventName, (event) => {
@@ -1766,10 +1785,23 @@ export class CanvasViewImpl implements CanvasView, Listener {
         }
 
         this.canvas.addEventListener('wheel', (event): void => {
-            if (event.ctrlKey) return;
+            if (this.ctrlPressed) {
+                // we do not use event.ctrlKey to handle pinch zoom using touchpad correctly
+                // peach zoom automatically generates 'wheel' event with event.ctrlKey equals to true
+                // even when the ctrl key is not pressed actually
+                return;
+            }
+
+            let { deltaY } = event;
+            // clamp too high values to avoid strong zooming
+            // high values are usually applicable to mice
+            // 8 is a good experimental value to avoid strong zooming
+            const LIMIT_DELTA_Y = 8;
+            deltaY = clamp(deltaY, -LIMIT_DELTA_Y, LIMIT_DELTA_Y);
+
             const { offset } = this.controller.geometry;
             const point = translateToSVG(this.content, [event.clientX, event.clientY]);
-            this.controller.zoom(point[0] - offset, point[1] - offset, event.deltaY > 0 ? -1 : 1);
+            this.controller.zoom(point[0] - offset, point[1] - offset, deltaY);
             this.canvas.dispatchEvent(
                 new CustomEvent('canvas.zoom', {
                     bubbles: false,
@@ -2243,8 +2275,8 @@ export class CanvasViewImpl implements CanvasView, Listener {
                 }),
             );
 
-            window.document.removeEventListener('keydown', this.onShiftKeyDown);
-            window.document.removeEventListener('keyup', this.onShiftKeyUp);
+            window.document.removeEventListener('keydown', this.onKeyDown);
+            window.document.removeEventListener('keyup', this.onKeyUp);
             window.document.removeEventListener('mouseup', this.onMouseUp);
             this.interactionHandler.destroy();
         }
