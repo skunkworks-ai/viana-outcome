@@ -497,6 +497,7 @@ function HeaderComponent(props: Props): JSX.Element {
                 ) : null}
             </div>
             <div className='cvat-right-header'>
+                {/* Start - Viana Outcome
                 <CVATTooltip overlay='Click to open repository'>
                     <Button
                         icon={<GithubOutlined />}
@@ -523,6 +524,7 @@ function HeaderComponent(props: Props): JSX.Element {
                         }}
                     />
                 </CVATTooltip>
+                End - Viana Outcome */}
                 <Dropdown
                     trigger={['click']}
                     destroyPopupOnHide
