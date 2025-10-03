@@ -372,12 +372,16 @@ function HeaderComponent(props: Props): JSX.Element {
         label: 'Settings',
     }, 30]);
 
+    // Start - Viana Outcome
+    /*
     menuItems.push([{
         key: 'about',
         icon: <InfoCircleOutlined />,
         onClick: () => showAboutModal(),
         label: 'About',
     }, 40]);
+    */
+    //  End - Viana Outcome
 
     menuItems.push([{
         key: 'logout',
