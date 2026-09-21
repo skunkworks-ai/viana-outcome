@@ -6,9 +6,8 @@
 import React from 'react';
 import { RouteComponentProps, useHistory } from 'react-router';
 import { withRouter } from 'react-router-dom';
-import { Row, Col } from 'antd/lib/grid';
 
-import SigningLayout, { formSizes } from 'components/signing-common/signing-layout';
+import LoginLayout from './login-layout';
 import LoginForm, { LoginData } from './login-form';
 
 interface LoginPageComponentProps {
@@ -30,24 +29,19 @@ function LoginPageComponent(props: LoginPageComponentProps & RouteComponentProps
     if (hasEmailVerificationBeenSent) {
         history.push('/auth/email-verification-sent');
     }
+
     return (
-        <SigningLayout>
-            <Col {...formSizes.wrapper}>
-                <Row justify='center'>
-                    <Col {...formSizes.form}>
-                        <LoginForm
-                            fetching={fetching}
-                            renderResetPassword={renderResetPassword}
-                            renderRegistrationComponent={renderRegistrationComponent}
-                            renderBasicLoginComponent={renderBasicLoginComponent}
-                            onSubmit={(loginData: LoginData): void => {
-                                onLogin(loginData.credential, loginData.password);
-                            }}
-                        />
-                    </Col>
-                </Row>
-            </Col>
-        </SigningLayout>
+        <LoginLayout>
+            <LoginForm
+                fetching={fetching}
+                renderResetPassword={renderResetPassword}
+                renderRegistrationComponent={renderRegistrationComponent}
+                renderBasicLoginComponent={renderBasicLoginComponent}
+                onSubmit={(loginData: LoginData): void => {
+                    onLogin(loginData.credential, loginData.password);
+                }}
+            />
+        </LoginLayout>
     );
 }
 

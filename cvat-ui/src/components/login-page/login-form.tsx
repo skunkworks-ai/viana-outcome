@@ -3,21 +3,13 @@
 //
 // SPDX-License-Identifier: MIT
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import Form from 'antd/lib/form';
 import Button from 'antd/lib/button';
 import Input from 'antd/lib/input';
-import { Col, Row } from 'antd/lib/grid';
-import Title from 'antd/lib/typography/Title';
-import Text from 'antd/lib/typography/Text';
-import Icon from '@ant-design/icons';
-import {
-    BackArrowIcon, ClearIcon,
-} from 'icons';
 
-import CVATSigningInput, { CVATInputType } from 'components/signing-common/cvat-signing-input';
 import { CombinedState } from 'reducers';
 import { useAuthQuery, usePlugins } from 'utils/hooks';
 
@@ -41,73 +33,29 @@ function LoginFormComponent(props: Props): JSX.Element {
 
     const authQuery = useAuthQuery();
     const [form] = Form.useForm();
-    const [credential, setCredential] = useState('');
     const pluginsToRender = usePlugins(
         (state: CombinedState) => state.plugins.components.loginPage.loginForm,
         props,
-        { credential },
+        { credential: '' },
     );
 
+    const credentialWatch = Form.useWatch('credential', form) || '';
     let resetSearch = authQuery ? new URLSearchParams(authQuery).toString() : '';
-    if (credential.includes('@')) {
-        const updatedAuthQuery = authQuery ? { ...authQuery, email: credential } : { email: credential };
+    if (credentialWatch.includes('@')) {
+        const updatedAuthQuery = authQuery ? { ...authQuery, email: credentialWatch } : { email: credentialWatch };
         resetSearch = new URLSearchParams(updatedAuthQuery).toString();
     }
 
-    const forgotPasswordLink = (
-        <Col className='cvat-credentials-link'>
-            <Text strong>
-                <Link to={{ pathname: '/auth/password/reset', search: resetSearch }}>
-                    Forgot password?
-                </Link>
-            </Text>
-        </Col>
-    );
-
     return (
         <div className='cvat-login-form-wrapper'>
-            <Row justify='space-between' className='cvat-credentials-navigation'>
-                {
-                    credential && (
-                        <Col>
-                            <Icon
-                                component={BackArrowIcon}
-                                onClick={() => {
-                                    setCredential('');
-                                    form.setFieldsValue({ credential: '' });
-                                }}
-                            />
-                        </Col>
-                    )
-                }
-                {
-                    !credential && renderRegistrationComponent && (
-                        <Row>
-                            <Col className='cvat-credentials-link'>
-                                <Text strong>
-                                    New user?&nbsp;
-                                    <Link to={{
-                                        pathname: '/auth/register',
-                                        search: authQuery ? new URLSearchParams(authQuery).toString() : '',
-                                    }}
-                                    >
-                                        Create an account
-                                    </Link>
-                                </Text>
-                            </Col>
-                        </Row>
-                    )
-                }
-                {
-                    renderResetPassword && forgotPasswordLink
-                }
-            </Row>
-            <Col>
-                <Title level={2}> Sign in </Title>
-            </Col>
+            <h1 className='cvat-login-title'>Sign In</h1>
+            <p className='cvat-login-sub'>Welcome back. Sign in to continue to your workspace.</p>
+
             <Form
-                className={`cvat-login-form ${credential ? 'cvat-login-form-extended' : ''}`}
+                className='cvat-login-form'
                 form={form}
+                layout='vertical'
+                requiredMark={false}
                 onFinish={(loginData: LoginData) => {
                     onSubmit(loginData);
                 }}
@@ -117,70 +65,93 @@ function LoginFormComponent(props: Props): JSX.Element {
                         <Form.Item
                             className='cvat-credentials-form-item'
                             name='credential'
+                            label='Email or username'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please specify an email or username',
+                                },
+                            ]}
                         >
                             <Input
-                                autoComplete='credential'
-                                prefix={<Text>Email or username</Text>}
-                                className={credential ? 'cvat-input-floating-label-above' : 'cvat-input-floating-label'}
-                                suffix={credential && (
-                                    <Icon
-                                        component={ClearIcon}
-                                        onClick={() => {
-                                            setCredential('');
-                                            form.setFieldsValue({ credential: '', password: '' });
-                                        }}
-                                    />
-                                )}
-                                onChange={(event) => {
-                                    const { value } = event.target;
-                                    setCredential(value);
-                                    if (!value) form.setFieldsValue({ credential: '', password: '' });
-                                }}
+                                className='cvat-login-input'
+                                id='credential'
+                                autoComplete='username'
+                                placeholder='you@meldcx.com'
                             />
                         </Form.Item>
-                        {
-                            credential && (
-                                <Form.Item
-                                    className='cvat-credentials-form-item'
-                                    name='password'
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Please specify a password',
-                                        },
-                                    ]}
-                                >
-                                    <CVATSigningInput
-                                        type={CVATInputType.PASSWORD}
-                                        id='password'
-                                        placeholder='Password'
-                                        autoComplete='password'
-                                    />
-                                </Form.Item>
-                            )
-                        }
-                        {
-                            !!credential && (
-                                <Form.Item>
-                                    <Button
-                                        className='cvat-credentials-action-button'
-                                        loading={fetching}
-                                        disabled={!credential}
-                                        htmlType='submit'
-                                    >
-                                        Next
-                                    </Button>
-                                </Form.Item>
-                            )
-                        }
+
+                        <Form.Item
+                            className='cvat-credentials-form-item'
+                            name='password'
+                            label='Password'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please specify a password',
+                                },
+                            ]}
+                        >
+                            <Input.Password
+                                className='cvat-login-input'
+                                id='password'
+                                autoComplete='current-password'
+                                placeholder='Enter your password'
+                            />
+                        </Form.Item>
+
+                        {renderResetPassword && (
+                            <div className='cvat-login-form-row'>
+                                <div className='cvat-credentials-link'>
+                                    <Link to={{ pathname: '/auth/password/reset', search: resetSearch }}>
+                                        Forgot password?
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
+
+                        <Form.Item>
+                            <Button
+                                className='cvat-credentials-action-button'
+                                type='primary'
+                                loading={fetching}
+                                htmlType='submit'
+                            >
+                                Sign In
+                            </Button>
+                        </Form.Item>
                     </>
                 )}
-                {
-                    pluginsToRender.map(({ component: Component }, index) => (
-                        <Component targetProps={props} targetState={{ credential }} key={index} />
-                    ))
-                }
+
+                {!!pluginsToRender.length && (
+                    <>
+                        {renderBasicLoginComponent && <div className='cvat-login-divider'>or</div>}
+                        <div className='cvat-login-plugins'>
+                            {pluginsToRender.map(({ component: Component }, index) => (
+                                <Component
+                                    targetProps={props}
+                                    targetState={{ credential: credentialWatch }}
+                                    key={index}
+                                />
+                            ))}
+                        </div>
+                    </>
+                )}
             </Form>
+
+            {renderRegistrationComponent && (
+                <p className='cvat-login-foot'>
+                    New user?
+                    {' '}
+                    <Link to={{
+                        pathname: '/auth/register',
+                        search: authQuery ? new URLSearchParams(authQuery).toString() : '',
+                    }}
+                    >
+                        Create an account
+                    </Link>
+                </p>
+            )}
         </div>
     );
 }
