@@ -1,0 +1,647 @@
+// Copyright (C) CVAT.ai Corporation
+//
+// SPDX-License-Identifier: MIT
+
+:root {
+    --cvat-login-viana-900: #232661;
+    --cvat-login-viana-800: #2b357d;
+    --cvat-login-viana-700: #244086;
+    --cvat-login-viana-600: #274e9c;
+    --cvat-login-viana-500: #3a62be;
+    --cvat-login-viana-050: #eef1fa;
+    --cvat-login-cls-vehicle: #4fc2f6;
+    --cvat-login-cls-person: #feb422;
+    --cvat-login-ink: #12162e;
+    --cvat-login-ink-2: #4a5070;
+    --cvat-login-ink-3: #787e9c;
+    --cvat-login-line: #dde1ee;
+    --cvat-login-surface: #ffffff;
+    --cvat-login-focus: #3a62be;
+    --cvat-login-radius-card: 20px;
+    --cvat-login-radius-field: 10px;
+    --cvat-login-font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.cvat-login-page {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    position: relative;
+    isolation: isolate;
+    margin: 0;
+    font-family: var(--cvat-login-font);
+    color: var(--cvat-login-ink);
+    background: var(--cvat-login-viana-900);
+    -webkit-font-smoothing: antialiased;
+}
+
+.cvat-login-brand {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: clamp(24px, 3vw, 40px);
+    padding: clamp(28px, 4vw, 56px);
+    color: #fff;
+    background:
+        radial-gradient(120% 90% at 8% 8%, rgba(58, 98, 190, 0.55) 0%, rgba(58, 98, 190, 0) 55%),
+        radial-gradient(90% 80% at 85% 95%, rgba(39, 78, 156, 0.65) 0%, rgba(39, 78, 156, 0) 60%),
+        linear-gradient(155deg, #232661 0%, #2b357d 42%, #244086 72%, #274e9c 100%);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='104' viewBox='0 0 120 104'%3E%3Cpath d='M60 2 105 28v52L60 106 15 80V28z' fill='none' stroke='%23ffffff' stroke-width='1.1'/%3E%3C/svg%3E");
+        background-size: 170px 147px;
+        opacity: 0.05;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        width: 60vmax;
+        height: 60vmax;
+        right: -22vmax;
+        bottom: -30vmax;
+        background: radial-gradient(circle, rgba(138, 245, 255, 0.15) 0%, rgba(138, 245, 255, 0) 62%);
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    > * {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+.cvat-login-scene {
+    width: 100%;
+    max-width: 620px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: linear-gradient(160deg, rgba(9, 12, 38, 0.62), rgba(16, 22, 62, 0.42));
+    box-shadow: 0 20px 44px -22px rgba(0, 0, 0, 0.65);
+
+    svg {
+        display: block;
+        width: 100%;
+        height: auto;
+        font-family: var(--cvat-login-font);
+    }
+}
+
+.cvat-login-trk {
+    will-change: transform;
+}
+
+#cvat-login-carA {
+    transform: translateX(300px);
+    animation: cvat-login-carA 15s linear infinite;
+}
+
+#cvat-login-carB {
+    transform: translateX(-320px);
+    animation: cvat-login-carB 19s linear infinite;
+}
+
+#cvat-login-p1 {
+    animation: cvat-login-walkA 7s ease-in-out infinite alternate;
+}
+
+#cvat-login-p2 {
+    animation: cvat-login-walkB 9s ease-in-out infinite alternate;
+}
+
+#cvat-login-p1 .cvat-login-body,
+#cvat-login-p2 .cvat-login-body {
+    animation: cvat-login-bob 1.1s ease-in-out infinite alternate;
+}
+
+#cvat-login-p2 .cvat-login-body {
+    animation-duration: 1.35s;
+}
+
+@keyframes cvat-login-carA {
+    from { transform: translateX(-200px); }
+    to { transform: translateX(620px); }
+}
+
+@keyframes cvat-login-carB {
+    from { transform: translateX(210px); }
+    to { transform: translateX(-500px); }
+}
+
+@keyframes cvat-login-walkA {
+    from { transform: translateX(16px); }
+    to { transform: translateX(-16px); }
+}
+
+@keyframes cvat-login-walkB {
+    from { transform: translateX(-14px); }
+    to { transform: translateX(14px); }
+}
+
+@keyframes cvat-login-bob {
+    from { transform: translateY(0); }
+    to { transform: translateY(-1.6px); }
+}
+
+.cvat-login-sweep {
+    animation: cvat-login-sweep 5.5s ease-in-out infinite;
+}
+
+@keyframes cvat-login-sweep {
+    0% { transform: translateX(-40px); opacity: 0; }
+    12% { opacity: 0.5; }
+    88% { opacity: 0.5; }
+    100% { transform: translateX(560px); opacity: 0; }
+}
+
+.cvat-login-pulse {
+    animation: cvat-login-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes cvat-login-pulse {
+    0%,
+    100% { opacity: 1; }
+    50% { opacity: 0.25; }
+}
+
+.cvat-login-box {
+    animation: cvat-login-lock 4.5s ease-in-out infinite;
+}
+
+#cvat-login-carB .cvat-login-box {
+    animation-delay: 0.7s;
+}
+
+#cvat-login-p1 .cvat-login-box {
+    animation-delay: 1.4s;
+}
+
+#cvat-login-p2 .cvat-login-box {
+    animation-delay: 2.1s;
+}
+
+@keyframes cvat-login-lock {
+    0%,
+    92%,
+    100% { opacity: 1; }
+    94% { opacity: 0.35; }
+    96% { opacity: 1; }
+}
+
+.cvat-login-playhead {
+    animation: cvat-login-scrub 15s linear infinite;
+}
+
+@keyframes cvat-login-scrub {
+    from { transform: translateX(0); }
+    to { transform: translateX(456px); }
+}
+
+.cvat-login-progress {
+    animation: cvat-login-grow 15s linear infinite;
+}
+
+@keyframes cvat-login-grow {
+    from { width: 0; }
+    to { width: 456px; }
+}
+
+.cvat-login-brand-logo {
+    .cvat-logo-icon {
+        img {
+            display: block;
+            width: clamp(130px, 12vw, 164px);
+            height: auto;
+            filter: brightness(0) invert(1);
+        }
+    }
+}
+
+.cvat-login-brand-main {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(22px, 2.6vw, 32px);
+    min-width: 0;
+}
+
+.cvat-login-brand-body {
+    max-width: 46ch;
+}
+
+.cvat-login-rule {
+    width: 56px;
+    height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #8af5ff, #4fc2f6);
+    margin: 0 0 18px;
+}
+
+.cvat-login-lede {
+    font-family: var(--cvat-login-font);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+    margin: 0 0 12px;
+    color: #fff;
+    text-wrap: balance;
+}
+
+.cvat-login-tagline {
+    margin: 0;
+    font-size: clamp(0.96rem, 1.15vw, 1.06rem);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.76);
+    max-width: 44ch;
+}
+
+.cvat-login-brand-foot {
+    display: flex;
+    align-items: baseline;
+    gap: 8px 18px;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.cvat-login-byline {
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 500;
+}
+
+.cvat-login-form-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(24px, 3.5vw, 56px);
+    background: var(--cvat-login-viana-050);
+}
+
+.cvat-login-page .cvat-login-form-wrapper {
+    width: 100%;
+    max-width: 428px;
+    background: var(--cvat-login-surface);
+    border-radius: var(--cvat-login-radius-card);
+    padding: clamp(30px, 3vw, 44px);
+    box-shadow:
+        0 30px 70px -18px rgba(12, 16, 46, 0.55),
+        0 2px 8px rgba(12, 16, 46, 0.16);
+    height: auto;
+    font-family: var(--cvat-login-font);
+
+    h1,
+    .cvat-login-title {
+        font-family: var(--cvat-login-font);
+        font-size: 1.8rem;
+        line-height: 1.15;
+        letter-spacing: -0.018em;
+        margin: 0 0 6px;
+        font-weight: 700;
+        color: var(--cvat-login-ink);
+    }
+
+    .cvat-login-sub {
+        margin: 0 0 26px;
+        color: var(--cvat-login-ink-2);
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .cvat-login-form {
+        position: static;
+        height: auto;
+        margin-top: 0;
+
+        .ant-form-item:first-child {
+            margin-bottom: 18px;
+        }
+
+        .ant-form-item:last-child:not(.cvat-credentials-form-item) {
+            position: static;
+            bottom: auto;
+            width: auto;
+        }
+    }
+
+    .cvat-credentials-form-item {
+        height: auto;
+
+        .ant-form-item-explain {
+            margin-bottom: 0;
+        }
+
+        // Beat signing-common underline styles on Input.Password.
+        .ant-input-affix-wrapper,
+        .ant-input-affix-wrapper:hover,
+        .ant-input-affix-wrapper-focused,
+        .ant-input-affix-wrapper-focused:hover {
+            border: 1px solid var(--cvat-login-line);
+            border-radius: var(--cvat-login-radius-field);
+            box-shadow: none;
+            padding: 0 14px;
+            background: #fff;
+        }
+
+        &.ant-form-item-has-error {
+            .ant-input-affix-wrapper,
+            .ant-input-affix-wrapper:hover,
+            .ant-input-affix-wrapper-focused,
+            .ant-input-affix-wrapper-focused:hover {
+                border-color: #ff4d4f;
+                box-shadow: none;
+            }
+        }
+    }
+
+    .ant-form-item {
+        margin-bottom: 18px;
+    }
+
+    .ant-form-item-explain-error:not(:first-child) {
+        display: none;
+    }
+
+    .ant-form-item-label > label {
+        font-size: 0.84rem;
+        font-weight: 500;
+        color: var(--cvat-login-ink-2);
+        height: auto;
+    }
+
+    // className lands on the <input> for email and on the affix wrapper for password.
+    .cvat-login-input.ant-input,
+    .cvat-login-input.ant-input-affix-wrapper {
+        width: 100%;
+        height: 48px;
+        padding: 0 14px !important;
+        font-family: var(--cvat-login-font);
+        font-size: 0.96rem !important;
+        color: var(--cvat-login-ink);
+        background: #fff;
+        border: 1px solid var(--cvat-login-line);
+        border-radius: var(--cvat-login-radius-field);
+        transition: border-color 0.16s ease, box-shadow 0.16s ease;
+        box-shadow: none;
+
+        &:hover {
+            border-color: #c3c9de;
+            box-shadow: none;
+        }
+
+        &:focus,
+        &:focus-visible,
+        &:focus-within,
+        &.ant-input-focused,
+        &.ant-input-affix-wrapper-focused {
+            outline: none;
+            border: 1px solid var(--cvat-login-focus);
+            box-shadow: 0 0 0 3px rgba(58, 98, 190, 0.18);
+        }
+
+        &::placeholder {
+            color: var(--cvat-login-ink-3);
+        }
+    }
+
+    .cvat-login-input.ant-input-affix-wrapper {
+        display: flex;
+        align-items: center;
+
+        .ant-input {
+            height: auto !important;
+            padding: 0 !important;
+            font-size: 0.96rem !important;
+            border: none !important;
+            border-radius: 0;
+            box-shadow: none !important;
+            background: transparent !important;
+
+            &:hover,
+            &:focus,
+            &.ant-input-focused {
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
+
+        &.ant-input-affix-wrapper-focused,
+        &.ant-input-affix-wrapper-focused:hover,
+        &:focus-within {
+            border: 1px solid var(--cvat-login-focus);
+            box-shadow: 0 0 0 3px rgba(58, 98, 190, 0.18);
+        }
+
+        .ant-input-suffix {
+            margin-left: 8px;
+            color: var(--cvat-login-ink-3);
+        }
+    }
+
+    .ant-input-password-icon {
+        color: var(--cvat-login-ink-3);
+
+        &:hover {
+            color: var(--cvat-login-viana-700);
+        }
+    }
+
+    .cvat-login-form-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 16px;
+        margin: -2px 0 24px;
+    }
+
+    .cvat-credentials-link {
+        a {
+            color: var(--cvat-login-viana-600);
+            font-weight: 500;
+            font-size: 0.88rem;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+                color: var(--cvat-login-viana-600);
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--cvat-login-focus);
+                outline-offset: 2px;
+                border-radius: 3px;
+            }
+        }
+    }
+
+    .cvat-credentials-action-button {
+        width: 100%;
+        height: 50px;
+        font-family: var(--cvat-login-font);
+        font-size: 1rem;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, var(--cvat-login-viana-800) 0%, var(--cvat-login-viana-600) 100%);
+        border: 0;
+        border-radius: var(--cvat-login-radius-field);
+        cursor: pointer;
+        transition: transform 0.14s ease, box-shadow 0.18s ease, filter 0.18s ease;
+        box-shadow: 0 8px 18px -6px rgba(39, 78, 156, 0.55);
+
+        &:hover,
+        &:focus {
+            color: #fff !important;
+            background: linear-gradient(135deg, var(--cvat-login-viana-800) 0%, var(--cvat-login-viana-600) 100%) !important;
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px -8px rgba(39, 78, 156, 0.6);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--cvat-login-viana-900);
+            outline-offset: 2px;
+        }
+
+        &[disabled] {
+            opacity: 0.65;
+            transform: none;
+            filter: none;
+        }
+    }
+
+    .cvat-login-divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 26px 0;
+        color: var(--cvat-login-ink-3);
+        font-size: 0.8rem;
+
+        &::before,
+        &::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--cvat-login-line);
+        }
+    }
+
+    .cvat-login-foot {
+        margin: 24px 0 0;
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--cvat-login-ink-2);
+
+        a {
+            color: var(--cvat-login-viana-600);
+            font-weight: 500;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .cvat-login-plugins {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .cvat-login-page {
+        grid-template-columns: 1fr;
+    }
+
+    .cvat-login-brand {
+        padding: 26px 24px 30px;
+        gap: 20px;
+    }
+
+    .cvat-login-scene {
+        display: none;
+    }
+
+    .cvat-login-brand-body {
+        max-width: none;
+    }
+
+    .cvat-login-brand-logo .cvat-logo-icon img {
+        width: 118px;
+    }
+
+    .cvat-login-lede {
+        font-size: clamp(1.35rem, 5.4vw, 1.75rem);
+        margin-bottom: 10px;
+    }
+
+    .cvat-login-rule {
+        margin-bottom: 14px;
+    }
+
+    .cvat-login-tagline {
+        font-size: 0.95rem;
+    }
+
+    .cvat-login-brand-foot {
+        display: none;
+    }
+
+    .cvat-login-form-panel {
+        padding: 0 20px 36px;
+        align-items: flex-start;
+        background: transparent;
+    }
+
+    .cvat-login-page .cvat-login-form-wrapper {
+        margin-top: -18px;
+        max-width: 520px;
+    }
+}
+
+@media (max-width: 420px) {
+    .cvat-login-page .cvat-login-form-wrapper {
+        padding: 26px 22px;
+
+        h1,
+        .cvat-login-title {
+            font-size: 1.55rem;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cvat-login-page * {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    .cvat-login-page .cvat-credentials-action-button:hover {
+        transform: none;
+    }
+
+    .cvat-login-sweep {
+        display: none;
+    }
+
+    .cvat-login-progress {
+        width: 196px;
+    }
+
+    .cvat-login-playhead {
+        transform: translateX(196px);
+    }
+}
