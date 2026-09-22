@@ -175,6 +175,7 @@ module.exports = (env) => {
             new HtmlWebpackPlugin({
                 template: './src/index.html',
                 inject: 'body',
+                favicon: './src/assets/favicon.ico',
             }),
             new Dotenv({
                 systemvars: true,
@@ -196,6 +197,10 @@ module.exports = (env) => {
                     {
                         from: 'src/assets/*.png',
                         to  : 'assets/[name][ext]',
+                    },
+                    {
+                        from: 'src/assets/favicon.ico',
+                        to  : 'favicon.ico',
                     },
                     {
                         from: 'plugins/**/assets/*.(onnx|js)',
