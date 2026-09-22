@@ -179,31 +179,6 @@ function AnnotationScene(): JSX.Element {
 
                     <g>
                         <rect
-                            x='16'
-                            y='16'
-                            width='146'
-                            height='26'
-                            rx='13'
-                            fill='#0B1030'
-                            fillOpacity='.62'
-                            stroke='#ffffff'
-                            strokeOpacity='.16'
-                        />
-                        <circle className='cvat-login-pulse' cx='31' cy='29' r='4' fill='#8AF5FF' />
-                        <text
-                            x='43'
-                            y='33.5'
-                            fontSize='11.5'
-                            fontWeight='700'
-                            fill='#ffffff'
-                            fillOpacity='.92'
-                            letterSpacing='.4'
-                        >
-                            AUTO-ANNOTATING
-                        </text>
-                    </g>
-                    <g>
-                        <rect
                             x='466'
                             y='16'
                             width='78'
