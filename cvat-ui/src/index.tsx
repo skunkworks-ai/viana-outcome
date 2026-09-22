@@ -7,6 +7,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { connect, Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import ConfigProvider from 'antd/lib/config-provider';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -151,15 +152,32 @@ function mapDispatchToProps(dispatch: any): DispatchToProps {
 
 const ReduxAppWrapper = connect(mapStateToProps, mapDispatchToProps)(CVATApplication);
 
+/** Matches --cvat-login-viana-500 / header & login brand accent */
+const VIANA_PRIMARY = '#3a62be';
+/** Lighter tint for Typography.Link, a tags, and Button type="link" */
+const VIANA_LINK = '#6b8cd9';
+const VIANA_LINK_HOVER = '#85a3e0';
+
 const root = createRoot(document.getElementById('root') as HTMLDivElement);
 root.render((
-    <Provider store={cvatStore}>
-        <BrowserRouter>
-            <PluginsEntrypoint />
-            <ReduxAppWrapper />
-        </BrowserRouter>
-        <LayoutGrid />
-    </Provider>
+    <ConfigProvider
+        theme={{
+            token: {
+                colorPrimary: VIANA_PRIMARY,
+                colorLink: VIANA_LINK,
+                colorLinkHover: VIANA_LINK_HOVER,
+                colorLinkActive: VIANA_PRIMARY,
+            },
+        }}
+    >
+        <Provider store={cvatStore}>
+            <BrowserRouter>
+                <PluginsEntrypoint />
+                <ReduxAppWrapper />
+            </BrowserRouter>
+            <LayoutGrid />
+        </Provider>
+    </ConfigProvider>
 ));
 
 window.addEventListener('unhandledrejection', (event: PromiseRejectionEvent) => {
